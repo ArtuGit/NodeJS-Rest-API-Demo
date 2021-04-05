@@ -14,10 +14,24 @@ components:
           type: string
           enum: [user, admin]
       example:
-        id: 5ebac534954b54139806c112
+        id: 5ebac534954b54139806c115
         email: fake@example.com
         name: fake name
         role: user
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+      example:
+        id: 5ebac534954b54139806c113
+        name: group name
+        description: group description
 
     Token:
       type: object
