@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { objectId } = require('./custom.validation');
 
 const createGroup = {
   body: Joi.object().keys({
@@ -18,7 +19,14 @@ const getGroups = {
   }),
 };
 
+const getGroup = {
+  params: Joi.object().keys({
+    groupId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createGroup,
-  getGroups
+  getGroups,
+  getGroup,
 };

@@ -24,7 +24,17 @@ const queryGroups = async (filter, options) => {
   return groups;
 };
 
+/**
+ * Get group by id
+ * @param {ObjectId} id
+ * @returns {Promise<Group>}
+ */
+const getGroupById = async (id) => {
+  return Group.findById(id);
+};
+
 module.exports = {
   createGroup,
-  queryGroups
+  queryGroups,
+  getGroupById
 };

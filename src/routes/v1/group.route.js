@@ -9,8 +9,13 @@ const router = express.Router();
 router
   .route('/')
   .post(auth(), validate(groupValidation.createGroup), groupController.createGroup)
-  .get(validate(groupValidation.getGroups), groupController.getGroups)
-;
+  .get(validate(groupValidation.getGroups), groupController.getGroups);
+
+router
+  .route('/:groupId')
+  .get(validate(groupValidation.getGroup), groupController.getGroup);
+  //.patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
+  //.delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 module.exports = router;
 
@@ -122,4 +127,34 @@ module.exports = router;
  *                 totalResults:
  *                   type: integer
  *                   example: 1
+ */
+
+/**
+ * @swagger
+ * /groups/{id}:
+ *   get:
+ *     summary: Get a group
+ *     description: Logged in users can fetch only groups where they are assigned as an admin or members. Only admins can fetch all groups.
+ *     tags: [Groups]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Group id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Group'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
  */
