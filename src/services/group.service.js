@@ -30,7 +30,7 @@ const queryGroups = async (filter, options) => {
  * @returns {Promise<Group>}
  */
 const getGroupById = async (id) => {
-  return Group.findById(id);
+  return Group.findById(id).populate('admin','name');
 };
 
 module.exports = {

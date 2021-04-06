@@ -13,7 +13,7 @@ router
 
 router
   .route('/:groupId')
-  .get(validate(groupValidation.getGroup), groupController.getGroup);
+  .get(auth('manageGroups'),validate(groupValidation.getGroup), groupController.getGroup);
   //.patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   //.delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
