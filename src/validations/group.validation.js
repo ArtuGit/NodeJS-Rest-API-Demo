@@ -8,6 +8,17 @@ const createGroup = {
   }),
 };
 
+const getGroups = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    description: Joi.string(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 module.exports = {
   createGroup,
+  getGroups
 };
