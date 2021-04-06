@@ -1,11 +1,12 @@
 const express = require('express');
+const auth = require('../../middlewares/auth');
 const groupController = require('../../controllers/group.controller');
 const validate = require('../../middlewares/validate');
 const groupValidation = require('../../validations/group.validation');
 
 const router = express.Router();
 
-router.route('/').post(validate(groupValidation.createGroup), groupController.createGroup)
+router.route('/').post(auth(), validate(groupValidation.createGroup), groupController.createGroup);
 
 module.exports = router;
 
@@ -23,6 +24,8 @@ module.exports = router;
  *     summary: Create a group
  *     description: Any user can create groups.
  *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -36,6 +39,8 @@ module.exports = router;
  *               name:
  *                 type: string
  *               description:
+ *                 type: string
+ *               image:
  *                 type: string
  *             example:
  *               name: new group
