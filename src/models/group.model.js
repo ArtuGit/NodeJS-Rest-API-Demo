@@ -13,10 +13,17 @@ const groupSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    users: [
+    image: {
+      type: String,
+    },
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
+    members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'User',
       },
     ],

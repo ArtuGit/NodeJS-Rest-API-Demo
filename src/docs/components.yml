@@ -28,10 +28,13 @@ components:
           type: string
         description:
           type: string
+        image:
+          type: string
       example:
         id: 5ebac534954b54139806c113
         name: group name
         description: group description
+        image: image.png
 
     Token:
       type: object
