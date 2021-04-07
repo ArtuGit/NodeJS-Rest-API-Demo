@@ -4,10 +4,10 @@ const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/roles');
 const { groupService } = require('../services');
 
-const authGroup = async (req,userId) => {
+const authGroup = async (req, userId) => {
   const group = await groupService.getGroupById(req.params.groupId);
   if (group && userId) {
-    if (userId === group.admin.id) {
+    if (!group.private || userId === group.admin.id) {
       return true;
     }
   }
@@ -34,7 +34,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
       let allowed = true;
       allowed = authUser(req, user.id);
       if (req.baseUrl === '/v1/groups' && req.url) {
-        allowed = await authGroup(req,user.id);
+        allowed = await authGroup(req, user.id);
       }
       if (!allowed) {
         return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
