@@ -134,8 +134,10 @@ module.exports = router;
  * /groups/{id}:
  *   get:
  *     summary: Get a group
- *     description: Logged in users can fetch only groups where they are assigned as an admin or members. Only admins can fetch all groups.
+ *     description: Anonymous and any users can fetch public group, project admins can fetch any group,  group admins and group members can fetch their own private group.
  *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
