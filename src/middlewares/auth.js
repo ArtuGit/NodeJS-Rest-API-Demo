@@ -33,12 +33,9 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
     if (!hasRequiredRights) {
       let allowed = true;
       allowed = authUser(req, user.id);
-      console.log('B1');
       if (req.baseUrl === '/v1/groups' && req.url) {
-        console.log('B2');
         allowed = await authGroup(req,user.id);
       }
-      console.log('B3');
       if (!allowed) {
         return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
       }
