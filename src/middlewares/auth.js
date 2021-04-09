@@ -4,14 +4,27 @@ const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/roles');
 const { groupService } = require('../services');
 
-const authGroup = async (req, userId) => {
-  const group = await groupService.getGroupById(req.params.groupId);
-  if (group && userId) {
-    if (!group.private || userId === group.admin.id) {
-      return true;
+const authGroup = async (req, userId, reject) => {
+  try {
+    const group = await groupService.getGroupById(req.params.groupId);
+    if (!group) {
+      return reject(new ApiError(httpStatus.NOT_FOUND, 'Group not found'));
     }
+    if (group && userId) {
+      if (!group.private || userId === group.admin.id) {
+        return true;
+      }
+    }
+    return false;
+  } catch (error) {
+    let errorCode;
+    if (error.name === 'CastError') {
+      errorCode = httpStatus.BAD_REQUEST;
+    } else {
+      errorCode = httpStatus.INTERNAL_SERVER_ERROR;
+    }
+    return reject(new ApiError(errorCode, error));
   }
-  return false;
 };
 
 const authUser = (req, userId) => {
@@ -34,7 +47,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
       let allowed = true;
       allowed = authUser(req, user.id);
       if (req.baseUrl === '/v1/groups' && req.url) {
-        allowed = await authGroup(req, user.id);
+        allowed = await authGroup(req, user.id, reject);
       }
       if (!allowed) {
         return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
