@@ -13,9 +13,9 @@ router
 
 router
   .route('/:groupId')
-  .get(auth('manageGroups'),validate(groupValidation.getGroup), groupController.getGroup);
-  //.patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-  //.delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth('manageGroups'), validate(groupValidation.getGroup), groupController.getGroup)
+  .patch(auth('manageGroups'), validate(groupValidation.updateGroup), groupController.updateGroup)
+  .delete(auth('manageGroups'), validate(groupValidation.deleteGroup), groupController.deleteGroup);
 
 module.exports = router;
 
@@ -44,6 +44,7 @@ module.exports = router;
  *             required:
  *               - name
  *               - description
+ *               - private
  *             properties:
  *               name:
  *                 type: string
@@ -159,4 +160,76 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
+ *   patch:
+ *     summary: Update a group
+ *     description: Logged in users can only update their own groups. Only admins can update any groups.
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Group id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - description
+ *               - private
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               private:
+ *                 type: boolean
+ *               image:
+ *                 type: string
+ *             example:
+ *               name: changed group name
+ *               description: changed group description
+ *               private: true
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   delete:
+ *     summary: Delete a group
+ *     description: Logged in users can only delete their own groups. Only admins can delete any groups.
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Group id
+ *     responses:
+ *       "200":
+ *         description: No content
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
  */

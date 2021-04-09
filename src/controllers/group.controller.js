@@ -29,8 +29,20 @@ const getGroup = catchAsync(async (req, res) => {
   res.send(group);
 });
 
+const updateGroup = catchAsync(async (req, res) => {
+  const group = await groupService.updateGroupById(req.params.groupId, req.body);
+  res.send(group);
+});
+
+const deleteGroup = catchAsync(async (req, res) => {
+  await groupService.deleteGroupById(req.params.groupId);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 module.exports = {
   createGroup,
   getGroups,
-  getGroup
+  getGroup,
+  updateGroup,
+  deleteGroup,
 };

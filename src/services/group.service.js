@@ -1,4 +1,6 @@
+const httpStatus = require('http-status');
 const { Group } = require('../models');
+const ApiError = require('../utils/ApiError');
 
 /**
  * Create a group
@@ -30,11 +32,44 @@ const queryGroups = async (filter, options) => {
  * @returns {Promise<Group>}
  */
 const getGroupById = async (id) => {
-  return Group.findById(id).populate('admin','name');
+  return Group.findById(id).populate('admin', 'name');
+};
+
+/**
+ * Update group by id
+ * @param {ObjectId} groupId
+ * @param {Object} updateBody
+ * @returns {Promise<Group>}
+ */
+const updateGroupById = async (groupId, updateBody) => {
+  const group = await getGroupById(groupId);
+  if (!group) {
+    // eslint-disable-next-line no-undef
+    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
+  }
+  Object.assign(group, updateBody);
+  await group.save();
+  return group;
+};
+
+/**
+ * Delete group by id
+ * @param {ObjectId} groupId
+ * @returns {Promise<Group>}
+ */
+const deleteGroupById = async (groupId) => {
+  const group = await getGroupById(groupId);
+  if (!group) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
+  }
+  await group.remove();
+  return group;
 };
 
 module.exports = {
   createGroup,
   queryGroups,
-  getGroupById
+  getGroupById,
+  updateGroupById,
+  deleteGroupById,
 };

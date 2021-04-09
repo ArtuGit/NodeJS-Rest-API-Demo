@@ -25,8 +25,29 @@ const getGroup = {
   }),
 };
 
+const updateGroup = {
+  params: Joi.object().keys({
+    groupId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      name: Joi.string(),
+      description: Joi.string(),
+      admin: Joi.forbidden(),
+    })
+    .min(1),
+};
+
+const deleteGroup = {
+  params: Joi.object().keys({
+    groupId: Joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createGroup,
   getGroups,
   getGroup,
+  updateGroup,
+  deleteGroup,
 };
