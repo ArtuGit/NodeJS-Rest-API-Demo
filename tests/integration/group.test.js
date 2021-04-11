@@ -6,11 +6,12 @@ const setupTestDB = require('../utils/setupTestDB');
 const { Group } = require('../../src/models');
 const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
 const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { groupPublic1, groupPublic2, groupPrivate, insertGroups } = require('../fixtures/group.fixture');
 
 setupTestDB();
 
 describe('Group routes', () => {
-  describe('POST /v1/group', () => {
+  describe('POST /v1/groups', () => {
     let newGroup;
     beforeEach(() => {
       newGroup = {
@@ -71,6 +72,64 @@ describe('Group routes', () => {
         description: newGroup.description,
         admin: userOne._id,
         private: newGroup.private,
+      });
+    });
+
+    test('should return 401 if Authorization is inappropriate', async () => {
+      await insertUsers([userOne]);
+      // eslint-disable-next-line no-unused-vars
+      const res = await request(app)
+        .post('/v1/groups')
+        .set('Authorization', `Bearer !WRONG!`)
+        .send(newGroup)
+        .expect(httpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe('GET /v1/groups', () => {
+    test('should return 200 and apply the default query options', async () => {
+      await insertGroups([groupPublic1, groupPublic2, groupPrivate]);
+
+      const res = await request(app).get('/v1/groups').send().expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 2,
+      });
+      expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[0]).toEqual({
+        id: groupPublic1._id.toHexString(),
+        name: groupPublic1.name,
+        description: groupPublic1.description,
+        admin: userOne._id.toHexString(),
+        members: [],
+        private: groupPublic1.private,
+      });
+    });
+
+    test('should correctly apply filter on name field', async () => {
+      await insertGroups([groupPublic1, groupPublic2, groupPrivate]);
+
+      const res = await request(app).get('/v1/groups').query({ name: groupPublic1.name }).send().expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 1,
+      });
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0]).toEqual({
+        id: groupPublic1._id.toHexString(),
+        name: groupPublic1.name,
+        description: groupPublic1.description,
+        admin: userOne._id.toHexString(),
+        members: [],
+        private: groupPublic1.private,
       });
     });
   });
