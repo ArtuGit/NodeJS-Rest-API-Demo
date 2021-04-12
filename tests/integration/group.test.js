@@ -4,8 +4,9 @@ const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { Group } = require('../../src/models');
-const { userOne, admin, insertUsers } = require('../fixtures/user.fixture');
-const { userOneAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
+// eslint-disable-next-line no-unused-vars
+const { userOneAccessToken, userTwoAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 const { groupPublic1, groupPublic2, groupPrivate, insertGroups } = require('../fixtures/group.fixture');
 
 setupTestDB();
@@ -151,7 +152,25 @@ describe('Group routes', () => {
     });
     test('should return 403 for a private group if a user is anonymous', async () => {
       await insertGroups([groupPrivate]);
-      await request(app).get(`/v1/groups/${groupPrivate._id}`).send().expect(httpStatus.INTERNAL_SERVER_ERROR); // ToDo: Why?
+      await request(app).get(`/v1/groups/${groupPrivate._id}`).send().expect(httpStatus.FORBIDDEN);
+    });
+    test('should return 403 for a private group if a user is not assigned as a group admin', async () => {
+      await insertGroups([groupPrivate]);
+      await request(app)
+        .get(`/v1/groups/${groupPrivate._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send()
+        .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 200 for a private group if a user is has admin role', async () => {
+      await insertUsers([userTwo, admin]);
+      await insertGroups([groupPrivate]);
+      await request(app)
+        .get(`/v1/groups/${groupPrivate._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send()
+        .expect(httpStatus.OK);
     });
   });
 });
