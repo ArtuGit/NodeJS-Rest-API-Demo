@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
-const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { groupService } = require('../services');
 
@@ -22,10 +21,7 @@ const getGroups = catchAsync(async (req, res) => {
 });
 
 const getGroup = catchAsync(async (req, res) => {
-  const group = await groupService.getGroupById(req.params.groupId);
-  if (!group) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
-  }
+  const group = await groupService.getGroupById(req.params.groupId, req.user);
   res.send(group);
 });
 

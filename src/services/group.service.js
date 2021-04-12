@@ -1,6 +1,27 @@
 const httpStatus = require('http-status');
 const { Group } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { checkUserRole } = require('./authorization.service');
+
+/**
+ * Authorize Group Access
+ * @param {Object} group
+ * @param {Object} user
+ * @returns {Boolean}
+ */
+const authorizeGroupAccess = async (group, user) => {
+  if (!group.private) {
+    return true;
+  }
+  const hasRequiredRights = await checkUserRole(user.role, 'manageGroups');
+  if (hasRequiredRights) {
+    return true;
+  }
+  if (user._id === group._id) {
+    return true;
+  }
+  return false;
+};
 
 /**
  * Create a group
@@ -29,10 +50,19 @@ const queryGroups = async (filter, options) => {
 /**
  * Get group by id
  * @param {ObjectId} id
+ * @param {Object} user
  * @returns {Promise<Group>}
  */
-const getGroupById = async (id) => {
-  return Group.findById(id).populate('admin', 'name');
+const getGroupById = async (id, user) => {
+  const group = await Group.findById(id).populate('admin', 'name');
+  if (!group) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
+  }
+  const auth = await authorizeGroupAccess(group, user);
+  if (!auth) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
+  return group;
 };
 
 /**

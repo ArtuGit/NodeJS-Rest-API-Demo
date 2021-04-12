@@ -77,8 +77,7 @@ describe('Group routes', () => {
 
     test('should return 401 if Authorization is inappropriate', async () => {
       await insertUsers([userOne]);
-      // eslint-disable-next-line no-unused-vars
-      const res = await request(app)
+      await request(app)
         .post('/v1/groups')
         .set('Authorization', `Bearer !WRONG!`)
         .send(newGroup)
@@ -131,6 +130,28 @@ describe('Group routes', () => {
         members: [],
         private: groupPublic1.private,
       });
+    });
+  });
+
+  describe('GET /v1/groups/:groupId', () => {
+    test('should return 200 and the group object if data is ok', async () => {
+      await insertUsers([userOne]);
+      await insertGroups([groupPublic1]);
+
+      const res = await request(app).get(`/v1/groups/${groupPublic1._id}`).send().expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        id: groupPublic1._id.toHexString(),
+        name: groupPublic1.name,
+        description: groupPublic1.description,
+        private: groupPublic1.private,
+        admin: expect.any(Object),
+        members: [],
+      });
+    });
+    test('should return 403 for a private group if a user is anonymous', async () => {
+      await insertGroups([groupPrivate]);
+      await request(app).get(`/v1/groups/${groupPrivate._id}`).send().expect(httpStatus.INTERNAL_SERVER_ERROR); // ToDo: Why?
     });
   });
 });

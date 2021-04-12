@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
+const authCustom = require('../../middlewares/authCustom');
 const groupController = require('../../controllers/group.controller');
 const validate = require('../../middlewares/validate');
 const groupValidation = require('../../validations/group.validation');
@@ -13,9 +14,9 @@ router
 
 router
   .route('/:groupId')
-  .get(auth('manageGroups'), validate(groupValidation.getGroup), groupController.getGroup)
-  .patch(auth('manageGroups'), validate(groupValidation.updateGroup), groupController.updateGroup)
-  .delete(auth('manageGroups'), validate(groupValidation.deleteGroup), groupController.deleteGroup);
+  .get(authCustom(), validate(groupValidation.getGroup), groupController.getGroup)
+  .patch(authCustom(), validate(groupValidation.updateGroup), groupController.updateGroup)
+  .delete(authCustom(), validate(groupValidation.deleteGroup), groupController.deleteGroup);
 
 module.exports = router;
 
