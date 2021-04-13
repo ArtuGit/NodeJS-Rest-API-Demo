@@ -150,6 +150,10 @@ describe('Group routes', () => {
         members: [],
       });
     });
+    test('should return 200 for a public group if a user is anonymous', async () => {
+      await insertGroups([groupPublic1]);
+      await request(app).get(`/v1/groups/${groupPublic1._id}`).send().expect(httpStatus.OK);
+    });
     test('should return 403 for a private group if a user is anonymous', async () => {
       await insertGroups([groupPrivate]);
       await request(app).get(`/v1/groups/${groupPrivate._id}`).send().expect(httpStatus.FORBIDDEN);
@@ -162,7 +166,15 @@ describe('Group routes', () => {
         .send()
         .expect(httpStatus.FORBIDDEN);
     });
-
+    test('should return 200 for a private group if a user is assigned as a group admin', async () => {
+      await insertUsers([userTwo]);
+      await insertGroups([groupPrivate]);
+      await request(app)
+        .get(`/v1/groups/${groupPrivate._id}`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .send()
+        .expect(httpStatus.OK);
+    });
     test('should return 200 for a private group if a user is has admin role', async () => {
       await insertUsers([userTwo, admin]);
       await insertGroups([groupPrivate]);
