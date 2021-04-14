@@ -26,12 +26,12 @@ const getGroup = catchAsync(async (req, res) => {
 });
 
 const updateGroup = catchAsync(async (req, res) => {
-  const group = await groupService.updateGroupById(req.params.groupId, req.body);
+  const group = await groupService.updateGroupById(req.params.groupId, req.body, req.user);
   res.send(group);
 });
 
 const deleteGroup = catchAsync(async (req, res) => {
-  await groupService.deleteGroupById(req.params.groupId);
+  await groupService.deleteGroupById(req.params.groupId, req.user);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

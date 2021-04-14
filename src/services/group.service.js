@@ -70,14 +70,11 @@ const getGroupById = async (id, user) => {
  * Update group by id
  * @param {ObjectId} groupId
  * @param {Object} updateBody
+ * @param {Object} user
  * @returns {Promise<Group>}
  */
-const updateGroupById = async (groupId, updateBody) => {
-  const group = await getGroupById(groupId);
-  if (!group) {
-    // eslint-disable-next-line no-undef
-    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
-  }
+const updateGroupById = async (groupId, updateBody, user) => {
+  const group = await getGroupById(groupId, user);
   Object.assign(group, updateBody);
   await group.save();
   return group;
@@ -86,13 +83,11 @@ const updateGroupById = async (groupId, updateBody) => {
 /**
  * Delete group by id
  * @param {ObjectId} groupId
+ * @param {Object} user
  * @returns {Promise<Group>}
  */
-const deleteGroupById = async (groupId) => {
-  const group = await getGroupById(groupId);
-  if (!group) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
-  }
+const deleteGroupById = async (groupId, user) => {
+  const group = await getGroupById(groupId, user);
   await group.remove();
   return group;
 };

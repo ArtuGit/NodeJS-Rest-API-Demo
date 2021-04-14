@@ -5,7 +5,6 @@ const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { Group } = require('../../src/models');
 const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
-// eslint-disable-next-line no-unused-vars
 const { userOneAccessToken, userTwoAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 const { groupPublic1, groupPublic2, groupPrivate, insertGroups } = require('../fixtures/group.fixture');
 
@@ -183,6 +182,21 @@ describe('Group routes', () => {
         .set('Authorization', `Bearer ${adminAccessToken}`)
         .send()
         .expect(httpStatus.OK);
+    });
+  });
+
+  describe('DELETE /v1/groups/:groupId', () => {
+    test('should return 204 if data is ok', async () => {
+      await insertUsers([userOne]);
+      await insertGroups([groupPublic1]);
+      await request(app)
+        .delete(`/v1/groups/${groupPublic1._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send()
+        .expect(httpStatus.NO_CONTENT);
+
+      const dbGroup = await Group.findById(groupPublic1._id);
+      expect(dbGroup).toBeNull();
     });
   });
 });
