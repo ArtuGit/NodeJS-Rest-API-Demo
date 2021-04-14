@@ -194,7 +194,6 @@ describe('Group routes', () => {
         .set('Authorization', `Bearer ${userOneAccessToken}`)
         .send()
         .expect(httpStatus.NO_CONTENT);
-
       const dbGroup = await Group.findById(groupPublic1._id);
       expect(dbGroup).toBeNull();
     });

@@ -7,13 +7,15 @@ const { checkUserRole } = require('./authorization.service');
  * Authorize Group Access
  * @param {Object} group
  * @param {Object} user
+ * @param {String} opType
  * @returns {Boolean}
  */
-const authorizeGroupAccess = async (group, user) => {
-  if (!group.private) {
-    return true;
+const authorizeGroupAccess = async (group, user, opType) => {
+  if (opType === 'GET') {
+    if (!group.private) {
+      return true;
+    }
   }
-
   if (user) {
     if (user._id.toHexString() === group.admin._id.toHexString()) return true;
     const hasRequiredRights = await checkUserRole(user.role, 'manageGroups');
@@ -21,7 +23,7 @@ const authorizeGroupAccess = async (group, user) => {
       return true;
     }
   }
-  return false;
+  throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
 };
 
 /**
@@ -59,10 +61,7 @@ const getGroupById = async (id, user) => {
   if (!group) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
   }
-  const auth = await authorizeGroupAccess(group, user);
-  if (!auth) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
-  }
+  await authorizeGroupAccess(group, user, 'GET');
   return group;
 };
 
@@ -88,6 +87,7 @@ const updateGroupById = async (groupId, updateBody, user) => {
  */
 const deleteGroupById = async (groupId, user) => {
   const group = await getGroupById(groupId, user);
+  await authorizeGroupAccess(group, user, 'DELETE');
   await group.remove();
   return group;
 };
