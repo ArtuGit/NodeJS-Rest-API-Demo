@@ -136,7 +136,7 @@ module.exports = router;
  * /groups/{id}:
  *   get:
  *     summary: Get a group
- *     description: Anonymous and any users can fetch public group, project admins can fetch any group,  group admins and group members can fetch their own private group.
+ *     description: Anonymous and any users can fetch public group, project admins can fetch any group, group admins and group members can fetch their own private group.
  *     tags: [Groups]
  *     security:
  *       - bearerAuth: []
