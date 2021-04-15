@@ -17,7 +17,7 @@ const authorizeGroupAccess = async (group, user, opType) => {
     }
   }
   if (user) {
-    if (user._id.toHexString() === group.admin._id.toHexString()) return true;
+    if (group.admin && user._id.toHexString() === group.admin._id.toHexString) return true;
     const hasRequiredRights = await checkUserRole(user.role, 'manageGroups');
     if (hasRequiredRights) {
       return true;
@@ -75,6 +75,7 @@ const getGroupById = async (id, user) => {
 const updateGroupById = async (groupId, updateBody, user) => {
   const group = await getGroupById(groupId, user);
   Object.assign(group, updateBody);
+  await authorizeGroupAccess(group, user, 'PATCH');
   await group.save();
   return group;
 };

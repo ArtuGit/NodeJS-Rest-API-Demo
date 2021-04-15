@@ -197,5 +197,133 @@ describe('Group routes', () => {
       const dbGroup = await Group.findById(groupPublic1._id);
       expect(dbGroup).toBeNull();
     });
+
+    test('Should return 403 for anonymous', async () => {
+      await insertGroups([groupPublic1]);
+      await request(app).delete(`/v1/groups/${groupPublic1._id}`).send().expect(httpStatus.FORBIDDEN);
+      const dbGroup = await Group.findById(groupPublic1._id);
+      expect(dbGroup).not.toBeNull();
+    });
+
+    test('Should return 403 if a user is not the group admin', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertGroups([groupPublic1]);
+      await request(app)
+        .delete(`/v1/groups/${groupPublic1._id}`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .send()
+        .expect(httpStatus.FORBIDDEN);
+      const dbGroup = await Group.findById(groupPublic1._id);
+      expect(dbGroup).not.toBeNull();
+    });
+
+    test('should return 204 if a user is admin', async () => {
+      await insertUsers([userTwo, admin]);
+      await insertGroups([groupPrivate]);
+      await request(app)
+        .delete(`/v1/groups/${groupPrivate._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send()
+        .expect(httpStatus.NO_CONTENT);
+      const dbGroup = await Group.findById(groupPrivate._id);
+      expect(dbGroup).toBeNull();
+    });
+  });
+
+  describe('PATCH /v1/groups/:groupId', () => {
+    test('should return 200 and successfully update user if data is ok', async () => {
+      await insertUsers([userOne]);
+      await insertGroups([groupPublic1]);
+      const updateBody = {
+        name: faker.lorem.words(3),
+        description: faker.lorem.words(10),
+      };
+
+      const res = await request(app)
+        .patch(`/v1/groups/${groupPublic1._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.OK);
+
+      expect(res.body).toEqual({
+        id: groupPublic1._id.toHexString(),
+        name: updateBody.name,
+        description: updateBody.description,
+        private: groupPublic1.private,
+        admin: expect.any(Object),
+        members: [],
+      });
+
+      const dbGroup = await Group.findById(groupPublic1._id);
+      expect(dbGroup).toBeDefined();
+      expect(dbGroup).toMatchObject({ name: updateBody.name, description: updateBody.description });
+    });
+    test('should return 400 if the request contains unresolved fields: admin', async () => {
+      await insertUsers([userOne]);
+      await insertGroups([groupPublic1]);
+      const updateBody = {
+        name: faker.lorem.words(3),
+        description: faker.lorem.words(10),
+        admin: '606a0be83f29402327faa751',
+      };
+      // eslint-disable-next-line no-unused-vars
+      const res = await request(app)
+        .patch(`/v1/groups/${groupPublic1._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+    test('should return 400 if the request contains unresolved fields: members', async () => {
+      await insertUsers([userOne]);
+      await insertGroups([groupPublic1]);
+      const updateBody = {
+        name: faker.lorem.words(3),
+        description: faker.lorem.words(10),
+        members: ['606a0be83f29402327faa751'],
+      };
+      // eslint-disable-next-line no-unused-vars
+      const res = await request(app)
+        .patch(`/v1/groups/${groupPublic1._id}`)
+        .set('Authorization', `Bearer ${userOneAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.BAD_REQUEST);
+    });
+
+    test('Should return 403 for anonymous', async () => {
+      await insertGroups([groupPublic1]);
+      const updateBody = {
+        name: faker.lorem.words(3),
+        description: faker.lorem.words(10),
+      };
+      await request(app).patch(`/v1/groups/${groupPublic1._id}`).send(updateBody).expect(httpStatus.FORBIDDEN);
+    });
+
+    test('Should return 403 if a user is not the group admin', async () => {
+      await insertUsers([userOne, userTwo]);
+      await insertGroups([groupPublic1]);
+      const updateBody = {
+        name: faker.lorem.words(3),
+        description: faker.lorem.words(10),
+      };
+      await request(app)
+        .patch(`/v1/groups/${groupPublic1._id}`)
+        .set('Authorization', `Bearer ${userTwoAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.FORBIDDEN);
+    });
+
+    test('should return 204 if a user is admin', async () => {
+      await insertUsers([userTwo, admin]);
+      await insertGroups([groupPrivate]);
+      const updateBody = {
+        name: faker.lorem.words(3),
+        description: faker.lorem.words(10),
+      };
+      await request(app)
+        .patch(`/v1/groups/${groupPrivate._id}`)
+        .set('Authorization', `Bearer ${adminAccessToken}`)
+        .send(updateBody)
+        .expect(httpStatus.OK);
+    });
   });
 });
