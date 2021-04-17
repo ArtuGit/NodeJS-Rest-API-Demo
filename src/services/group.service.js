@@ -17,7 +17,7 @@ const authorizeGroupAccess = async (group, user, opType) => {
     }
   }
   if (user) {
-    if (group.admin && user._id.toHexString() === group.admin._id.toHexString) return true;
+    if (group.admin && user._id.toHexString() === group.admin._id.toHexString()) return true;
     const hasRequiredRights = await checkUserRole(user.role, 'manageGroups');
     if (hasRequiredRights) {
       return true;
