@@ -35,7 +35,7 @@ describe('Group routes', () => {
         description: newGroup.description,
         admin: expect.anything(),
         private: newGroup.private,
-        members: [],
+        members: expect.any(Array),
       });
 
       const dbGroup = await Group.findById(res.body.id);
@@ -62,7 +62,7 @@ describe('Group routes', () => {
         description: newGroup.description,
         admin: expect.anything(),
         private: newGroup.private,
-        members: [],
+        members: expect.any(Array),
       });
 
       const dbGroup = await Group.findById(res.body.id);
@@ -104,7 +104,7 @@ describe('Group routes', () => {
         name: groupPublic1.name,
         description: groupPublic1.description,
         admin: userOne._id.toHexString(),
-        members: [],
+        members: expect.any(Array),
         private: groupPublic1.private,
       });
     });
@@ -127,7 +127,7 @@ describe('Group routes', () => {
         name: groupPublic1.name,
         description: groupPublic1.description,
         admin: userOne._id.toHexString(),
-        members: [],
+        members: expect.any(Array),
         private: groupPublic1.private,
       });
     });
@@ -146,7 +146,7 @@ describe('Group routes', () => {
         description: groupPublic1.description,
         private: groupPublic1.private,
         admin: expect.any(Object),
-        members: [],
+        members: expect.any(Array),
       });
     });
     test('should return 200 for a public group if a user is anonymous', async () => {
@@ -251,7 +251,7 @@ describe('Group routes', () => {
         description: updateBody.description,
         private: groupPublic1.private,
         admin: expect.any(Object),
-        members: [],
+        members: expect.any(Array),
       });
 
       const dbGroup = await Group.findById(groupPublic1._id);
