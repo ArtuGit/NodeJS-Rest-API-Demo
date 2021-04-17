@@ -93,10 +93,38 @@ const deleteGroupById = async (groupId, user) => {
   return group;
 };
 
+/**
+ * Add a User to a Group
+ * @param {ObjectId} groupId
+ * @param {Object} user
+ * @returns {Promise<Group>}
+ */
+const addUserToGroup = async (groupId, user) => {
+  let group = await getGroupById(groupId, user);
+  await authorizeGroupAccess(group, user, 'GET');
+  group = await group.addUser(user);
+  return group;
+};
+
+/**
+ * Delete a User from a Group
+ * @param {ObjectId} groupId
+ * @param {Object} user
+ * @returns {Promise<Group>}
+ */
+const deleteUserFromGroup = async (groupId, user) => {
+  let group = await getGroupById(groupId, user);
+  await authorizeGroupAccess(group, user, 'GET');
+  group = await group.deleteUser(user);
+  return group;
+};
+
 module.exports = {
   createGroup,
   queryGroups,
   getGroupById,
   updateGroupById,
   deleteGroupById,
+  addUserToGroup,
+  deleteUserFromGroup,
 };

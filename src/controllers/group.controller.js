@@ -35,10 +35,22 @@ const deleteGroup = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const addUserToGroup = catchAsync(async (req, res) => {
+  const group = await groupService.addUserToGroup(req.params.groupId, req.user);
+  res.send(group);
+});
+
+const deleteUserFromGroup = catchAsync(async (req, res) => {
+  const group = await groupService.deleteUserFromGroup(req.params.groupId, req.user);
+  res.send(group);
+});
+
 module.exports = {
   createGroup,
   getGroups,
   getGroup,
   updateGroup,
   deleteGroup,
+  addUserToGroup,
+  deleteUserFromGroup,
 };

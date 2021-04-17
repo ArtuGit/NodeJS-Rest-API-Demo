@@ -37,6 +37,25 @@ const groupSchema = mongoose.Schema(
   }
 );
 
+groupSchema.methods.addUser = function (user) {
+  const userId = user._id;
+  if (!this.members.includes(userId)) {
+    this.members.push(userId);
+    return this.save();
+  }
+  return this;
+};
+
+groupSchema.methods.deleteUser = function (user) {
+  const userId = user._id;
+  const index = this.members.findIndex((item) => item.toHexString() === userId.toHexString());
+  if (index !== -1) {
+    this.members.splice(index, 1);
+    return this.save();
+  }
+  return this;
+};
+
 // add plugin that converts mongoose to json
 groupSchema.plugin(toJSON);
 groupSchema.plugin(paginate);

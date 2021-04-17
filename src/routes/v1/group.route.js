@@ -18,6 +18,9 @@ router
   .patch(authCustom(), validate(groupValidation.updateGroup), groupController.updateGroup)
   .delete(authCustom(), validate(groupValidation.deleteGroup), groupController.deleteGroup);
 
+router.route('/:groupId/user-add').patch(authCustom(), groupController.addUserToGroup);
+router.route('/:groupId/user-delete').patch(authCustom(), groupController.deleteUserFromGroup);
+
 module.exports = router;
 
 /**
@@ -233,4 +236,68 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+
+/**
+ * @swagger
+ * /groups/{id}/user-add:
+ *   patch:
+ *     summary: Add the current (authenticated) User to a Group
+ *     description: Logged in users can add themselves to public groups.
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Group id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ */
+
+/**
+ * @swagger
+ * /groups/{id}/user-delete:
+ *   patch:
+ *     summary: Delete the current (authenticated) from a Group
+ *     description: Logged in users can delete themselves from public groups.
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Group id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/User'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
  */
