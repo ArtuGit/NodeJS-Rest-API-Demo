@@ -4,8 +4,8 @@ const httpStatus = require('http-status');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { Group } = require('../../src/models');
-const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
-const { userOneAccessToken, userTwoAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
+const { userOne, userTwo, userThree, admin, insertUsers } = require('../fixtures/user.fixture');
+const { userOneAccessToken, userTwoAccessToken, userThreeAccessToken, adminAccessToken } = require('../fixtures/token.fixture');
 const { groupPublic1, groupPublic2, groupPrivate, insertGroups } = require('../fixtures/group.fixture');
 
 setupTestDB();
@@ -326,4 +326,56 @@ describe('Group routes', () => {
         .expect(httpStatus.OK);
     });
   });
+
+  describe('User adding/deleting to a group /v1/groups/:groupId/*', () => {
+    describe('User adding to a group /v1/groups/:groupId/user-add', () => {
+      test('should return 200 if data is ok', async () => {
+        await insertUsers([userOne, userThree]);
+        await insertGroups([groupPublic1]);
+        await request(app)
+          .patch(`/v1/groups/${groupPublic1._id}/user-add`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .send()
+          .expect(httpStatus.OK);
+        const dbGroup = await Group.findById(groupPublic1._id);
+        expect(dbGroup.members).toHaveLength(2);
+      });
+      test('should return 403 for a regular user for private group', async () => {
+        await insertUsers([userOne, userTwo, userThree]);
+        await insertGroups([groupPrivate]);
+        await request(app)
+          .patch(`/v1/groups/${groupPrivate._id}/user-add`)
+          .set('Authorization', `Bearer ${userOneAccessToken}`)
+          .send()
+          .expect(httpStatus.FORBIDDEN);
+        const dbGroup = await Group.findById(groupPrivate._id);
+        expect(dbGroup.members).toHaveLength(1);
+      });
+    })
+    describe('User deleting to a group /v1/groups/:groupId/user-delete', () => {
+      test('should return 200 if data is ok', async () => {
+        await insertUsers([userOne, userThree]);
+        await insertGroups([groupPublic1]);
+        await request(app)
+          .patch(`/v1/groups/${groupPublic1._id}/user-delete`)
+          .set('Authorization', `Bearer ${userThreeAccessToken}`)
+          .send()
+          .expect(httpStatus.OK);
+        const dbGroup = await Group.findById(groupPublic1._id);
+        expect(dbGroup.members).toHaveLength(0);
+      });
+      test('should return 403 for a regular user for private group', async () => {
+        await insertUsers([userTwo, userThree]);
+        await insertGroups([groupPrivate]);
+        await request(app)
+          .patch(`/v1/groups/${groupPrivate._id}/user-delete`)
+          .set('Authorization', `Bearer ${userThreeAccessToken}`)
+          .send()
+          .expect(httpStatus.FORBIDDEN);
+        const dbGroup = await Group.findById(groupPrivate._id);
+        expect(dbGroup.members).toHaveLength(1);
+      });
+    })
+  });
+
 });

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const faker = require('faker');
-const { userOne, userTwo } = require('./user.fixture');
+const { userOne, userTwo, userThree } = require('./user.fixture');
 const Group = require('../../src/models/group.model');
 
 const groupPublic1 = {
@@ -9,7 +9,7 @@ const groupPublic1 = {
   description: faker.lorem.words(10),
   private: false,
   admin: userOne._id,
-  members: [],
+  members: [userThree._id],
 };
 
 const groupPublic2 = {
@@ -18,7 +18,7 @@ const groupPublic2 = {
   description: faker.lorem.words(10),
   private: false,
   admin: userTwo._id,
-  members: [],
+  members: [userThree._id],
 };
 
 const groupPrivate = {
@@ -27,7 +27,7 @@ const groupPrivate = {
   description: faker.lorem.words(10),
   private: true,
   admin: userTwo._id,
-  members: [],
+  members: [userThree._id],
 };
 
 const insertGroups = async (groups) => {
