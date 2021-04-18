@@ -25,6 +25,7 @@ jobs:
       - run: echo "$MONGODB_URL" > .env
       - run: echo "$JWT_SECRET" >> .env
       - run: echo $ENV >> .env
+      - run: echo 'Lorem Ipsum' >> .env
       - run: ls -la
       - run: cat .env
       #- run: yarn install
