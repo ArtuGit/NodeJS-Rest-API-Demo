@@ -18,9 +18,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-          CUSTO: ${{ secrets.CUSTO }}
-       - run: echo ${{ secrets.ENV }} > .env
-       - run: echo ${{ secrets.ENV }}
+       env:
+         CUSTO: ${{ secrets.CUSTO }}
+       - run: echo ${{ secrets.CUSTO }} > .env
+       - run: echo ${{ secrets.CUSTO }}
 #      - run: touch .env
 #      - run: echo ${{ secrets.ENV }} >> .env
 #      - run: echo 'rogue' >> .env
