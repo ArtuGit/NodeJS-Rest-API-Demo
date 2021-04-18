@@ -2,14 +2,15 @@ name: Node.js Build, Test, and Deploy
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ staging, master ]
   pull_request:
-    branches: [ staging ]
+    branches: [ staging, master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: Node Build & Test
+    if: github.ref == 'refs/heads/staging'
     env:
       ENV: ${{ secrets.ENV }}
     steps:
