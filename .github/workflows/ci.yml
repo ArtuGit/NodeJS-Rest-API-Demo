@@ -7,18 +7,6 @@ on:
     branches: [ staging ]
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Prepare .env file
-        env:
-          ENV: ${{ secrets.ENV }}
-        run: |
-          echo "$ENV"
-          echo "$ENV" > .env
-          ls -la
-          cat .env
-
   build:
     runs-on: ubuntu-latest
     name: Node Build & Test
@@ -32,4 +20,6 @@ jobs:
       - run: echo "$ENV" > .env
       - run: ls -la
       - run: yarn install
+      - run: yarn test
+
 
