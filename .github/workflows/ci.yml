@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run pwd
+      - run: pwd
 #      - run: echo ${{ secrets.ENV }} > .env
 #      - run: yarn install
 #      - run: yarn test
