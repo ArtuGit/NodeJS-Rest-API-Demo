@@ -12,3 +12,4 @@ jobs:
           SUPER_SECRET: ${{ secrets.CUSTO }}
         run: |
           echo "$SUPER_SECRET"
+          echo "$SUPER_SECRET" >> test.txt
