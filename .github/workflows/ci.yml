@@ -8,26 +8,24 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [14.x]
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-        env: # Or as an environment variable
+        env:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      - run: echo $MONGODB_URL
       - run: cp .env.ci .env
+      - run: echo "$MONGODB_URL" >> .env
+      - run: echo "$JWT_SECRET" >> .env
       - run: ls -la
       - run: cat .env
-      - run: yarn install
-      - run: yarn test
+      #- run: yarn install
+      #- run: yarn test
 
