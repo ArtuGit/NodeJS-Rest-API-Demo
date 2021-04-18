@@ -15,10 +15,10 @@ jobs:
     steps:
       - shell: bash
         env:
-          ENV_SECRET: ${{ secrets.ENV }}
+          ENV: ${{ secrets.ENV }}
         run: |
-          echo "$ENV_SECRET"
-          echo "$ENV_SECRET" >> .env
+          echo "$ENV"
+          echo "$ENV" >> .env
           ls -la
           cat .env
 
