@@ -19,9 +19,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
         env:
-          SUPER_SECRET: ${{ secrets.ENV }}
+          ENV: ${{ secrets.ENV }}
         run: |
-          echo "$SUPER_SECRET"
-          echo "$SUPER_SECRET" >> test.txt
+          echo "$ENV" >> .env
           ls -la
-          cat test.txt
+          cat .env
