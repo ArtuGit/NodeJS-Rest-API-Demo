@@ -18,11 +18,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: touch .env
-      - run: echo ${{ secrets.ENV }} >> .env
-      - run: echo 'rogue' >> .env
-      - run: ls -la
-      - run: cat .env
-      - run: yarn install
-      - run: yarn test
+          CUSTO: ${{ secrets.CUSTO }}
+       - run: echo ${{ secrets.ENV }} > .env
+       - run: echo ${{ secrets.ENV }}
+#      - run: touch .env
+#      - run: echo ${{ secrets.ENV }} >> .env
+#      - run: echo 'rogue' >> .env
+#      - run: ls -la
+#      - run: cat .env
+#      - run: yarn install
+#      - run: yarn test
 
