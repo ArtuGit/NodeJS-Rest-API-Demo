@@ -1,4 +1,4 @@
-name: Node.js Test, Build and Notify
+name: Node.js Build, Test, and Deploy
 
 on:
   push:
@@ -8,21 +8,17 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-
+    name: Node Build & Test
+    env:
+      ENV: ${{ secrets.ENV }}
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: yarn install jest
+          node-version: '14'
+      - run: echo "$ENV" > .env
+      - run: yarn install
       - run: yarn test
 
-        env:
-          CI: true
+
