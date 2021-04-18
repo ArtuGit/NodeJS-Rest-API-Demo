@@ -1,17 +1,27 @@
-name: Workflows with large secrets
+name: Node.js Build, Test, and Deploy
 
-on: push
+on:
+  push:
+    branches: [ staging ]
+  pull_request:
+    branches: [ staging ]
 
 jobs:
-  my-job:
-    name: My Job
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
     steps:
-      - shell: bash
-        env:
-          SUPER_SECRET: ${{ secrets.ENV }}
-        run: |
-          echo "$SUPER_SECRET"
-          echo "$SUPER_SECRET" >> test.txt
-          ls -la
-          cat test.txt
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: touch .env
+      - run: echo ${{ secrets.ENV }} >> .env
+      - run: echo 'rogue' >> .env
+      - run: ls -la
+      - run: cat .env
+      - run: yarn install
+      - run: yarn test
