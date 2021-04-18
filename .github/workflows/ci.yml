@@ -12,19 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     name: Node Build & Test
     env:
-      ENV2: ${{ secrets.ENV2 }}
+      ENV: ${{ secrets.ENV }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: echo "$ENV2" > .env
+      - run: echo "$ENV" > .env
       - run: yarn install
       - run: yarn test
 
   deploy:
     if: github.ref == 'refs/heads/master'
-    runs-on: [ ubuntu-latest ]
+    runs-on:  ubuntu-latest
     steps:
       - name: Deploy to the prod server
         uses: appleboy/ssh-action@master
