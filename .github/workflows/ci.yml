@@ -18,7 +18,6 @@ jobs:
         with:
           node-version: '14'
       - run: echo "$ENV" > .env
-      - run: ls -la
       - run: yarn install
       - run: yarn test
 
