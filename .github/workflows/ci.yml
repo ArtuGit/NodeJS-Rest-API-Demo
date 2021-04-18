@@ -21,6 +21,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+        env: # Or as an environment variable
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      - run: echo $MONGODB_URL
       - run: cp .env.ci .env
       - run: ls -la
       - run: cat .env
