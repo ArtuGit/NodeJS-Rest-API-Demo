@@ -29,5 +29,5 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-            - run:  ls -la
-            - run:  cat .env
+        - run: ls -la
+        - run: cat .env
