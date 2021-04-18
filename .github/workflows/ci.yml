@@ -21,10 +21,10 @@ jobs:
         env:
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      - run: cp .env.ci .env
-      - run: echo "$MONGODB_URL" >> .env
+          ENV: ${{ secrets.ENV }}
+      - run: echo "$MONGODB_URL" > .env
       - run: echo "$JWT_SECRET" >> .env
-      - run: echo ${{ secrets.ENV }} >> .env
+      - run: echo $ENV >> .env
       - run: ls -la
       - run: cat .env
       #- run: yarn install
