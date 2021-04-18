@@ -13,3 +13,5 @@ jobs:
         run: |
           echo "$SUPER_SECRET"
           echo "$SUPER_SECRET" >> test.txt
+          ls -la
+          cat test.txt
