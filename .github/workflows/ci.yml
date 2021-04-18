@@ -7,7 +7,7 @@ on:
     branches: [ staging ]
 
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-latest
     steps:
       - name: Prepare .env file
@@ -18,3 +18,15 @@ jobs:
           echo "$ENV" > .env
           ls -la
           cat .env
+
+  build:
+    runs-on: ubuntu-latest
+    name: Node Build & Test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      run: |
+        yarn install
+        yarn test
