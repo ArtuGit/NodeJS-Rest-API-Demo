@@ -20,6 +20,6 @@ jobs:
       - run: echo "$ENV" > .env
       - run: ls -la
       - run: yarn install
-      - run: yarn test
+      - run: yarn dev
 
 
