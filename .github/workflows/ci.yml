@@ -14,7 +14,6 @@ jobs:
         node-version: [14.x]
     steps:
       - name: Prepare .env file
-      - shell: bash
         env:
           ENV: ${{ secrets.ENV }}
         run: |
