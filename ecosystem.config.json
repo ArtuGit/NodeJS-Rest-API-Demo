@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "NodeJS-Rest-API-Demo",
+      "name": "NodeJS Rest API Demo",
       "script": "src/index.js",
       "instances": "max",
       "watch": true,
