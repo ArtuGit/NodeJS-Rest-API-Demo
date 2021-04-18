@@ -1,4 +1,4 @@
-name: Node.js Test, Build and Notify
+name: Node.js Build, Test, and Deploy
 
 on:
   push:
