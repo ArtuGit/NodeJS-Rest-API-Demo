@@ -15,10 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create env file
-        run: |
-        touch .env
-        echo ${{ secrets.ENV }} >> .env
-        cat .env
+      - run: touch .env
+      - run: echo ${{ secrets.ENV }} >> .env
+      - run: cat .env
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
