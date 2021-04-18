@@ -20,7 +20,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
         env:
           ENV: ${{ secrets.ENV }}
-        run: |
-          echo "$ENV" >> .env
-          ls -la
-          cat .env
+        - run: echo "$ENV" >> .env
+        - run:  ls -la
+        - run:  cat .env
