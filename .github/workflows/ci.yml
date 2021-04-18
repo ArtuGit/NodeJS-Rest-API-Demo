@@ -9,7 +9,7 @@ jobs:
     steps:
       - shell: bash
         env:
-          SUPER_SECRET: ${{ secrets.CUSTO }}
+          SUPER_SECRET: ${{ secrets.ENV }}
         run: |
           echo "$SUPER_SECRET"
           echo "$SUPER_SECRET" >> test.txt
