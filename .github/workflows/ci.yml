@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: pwd
+      - run: ls -la
 #      - run: echo ${{ secrets.ENV }} > .env
 #      - run: yarn install
 #      - run: yarn test
