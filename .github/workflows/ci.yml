@@ -18,7 +18,7 @@ jobs:
           ENV: ${{ secrets.ENV }}
         run: |
           echo "$ENV"
-          echo "$ENV" >> .env
+          echo "$ENV" > .env
           ls -la
           cat .env
 
