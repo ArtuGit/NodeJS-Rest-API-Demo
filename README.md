@@ -1,4 +1,4 @@
-# NodeJS-Rest-API-Demo
+# NodeJS Restful API Demo
 
 ## Demo
 
@@ -11,6 +11,8 @@ This project is based on
 [RESTful API Node Server Boilerplate](https://github.com/hagopj13/node-express-boilerplate) and extends the functionality by groups.
 
 ##  Added Feature - Groups
+
+### Management of groups and participation in groups.
 
 - Users can create and manage their groups
 - Admin can manage groups
@@ -30,5 +32,3 @@ This project is based on
 - [Groups Unit Tests](https://github.com/ArtuGit/NodeJS-Rest-API-Demo/tree/master/tests/unit)
 - [Groups Integration Tests](https://github.com/ArtuGit/NodeJS-Rest-API-Demo/blob/master/tests/integration/group.test.js)
 - [Github CI: Build, Test, and Deploy](https://github.com/ArtuGit/NodeJS-Rest-API-Demo/tree/master/.github/workflows)
-
-
