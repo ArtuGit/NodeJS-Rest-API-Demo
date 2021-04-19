@@ -1,27 +1,12 @@
-name: Node.js Build, Test, and Deploy
+name: Node.js Deploy
 
 on:
   push:
-    branches: [ staging, master ]
+    branches: [ master ]
   pull_request:
-    branches: [ staging, master ]
+    branches: [ master ]
 
 jobs:
-  build:
-    if: github.ref == 'refs/heads/staging'
-    runs-on: ubuntu-latest
-    name: Node Build & Test
-    env:
-      ENV: ${{ secrets.ENV }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: echo "$ENV" > .env
-      - run: yarn install
-      - run: yarn test
-
   deploy:
     if: github.ref == 'refs/heads/master'
     runs-on:  ubuntu-latest
