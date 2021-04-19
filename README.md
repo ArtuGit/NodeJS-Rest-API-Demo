@@ -3,6 +3,7 @@
 ## Demo
 
 https://rest-api-demo.itcross.org (in development mode)
+See also [Swagger UI for the project](https://rest-api-demo.itcross.org/v1/docs/).
 
 ## Source
 
@@ -17,8 +18,6 @@ This project is based on
 - A user can add herself to any public group
 - All public groups can be requested
 - Private groups can be requested by group admins
-
-See more on [Swagger UI for the project](http://localhost:3000/v1/docs).
 
 ## Developments
 
