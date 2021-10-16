@@ -2,7 +2,7 @@
 
 ## Demo
 
-https://rest-api-demo.itcross.org:3000/v1/docs
+https://rest-api-demo.itcross.org/v1/docs
 
 ## Source
 
