@@ -1,9 +1,5 @@
 # NodeJS-Rest-API-Demo
 
-## Demo
-
-https://rest-api-demo.itcross.org/v1/docs
-
 ## Source
 
 This project is based on
